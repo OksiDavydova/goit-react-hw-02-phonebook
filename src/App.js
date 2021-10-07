@@ -1,7 +1,89 @@
-// import './App.css';
+import "./App.css";
+import React, { Component } from "react";
+import shortid from "shortid";
+import { Container } from "./components/Container/Container";
+import { ContactForm } from "./components/ContactForm/ContactForm";
+import { ContactList } from "./components/ContactList/ContactList";
+import { Filter } from "./components/Filter/Filter";
+class App extends Component {
+  state = {
+    contacts: [
+      { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
+      { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
+      { id: "id-3", name: "Eden Clements", number: "645-17-79" },
+      { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
+    ],
+    filter: "",
+  };
 
-function App() {
-  return <div className="App"></div>;
+  addNewContact = (addContact) => {
+    const { name, number } = addContact;
+    const contact = {
+      id: shortid.generate(),
+      name,
+      number,
+    };
+
+    const { contacts } = this.state;
+    const normalizedName = name.toLowerCase();
+    if (
+      contacts.find(
+        (contactItem) => contactItem.name.toLowerCase() === normalizedName
+      )
+    ) {
+      alert(`${name} is already in contacts list`);
+      return;
+    } else if (contacts.find((contactItem) => contactItem.number === number)) {
+      alert(`${number} is already in contacts list`);
+      return;
+    } else {
+      this.setState(({ contacts }) => {
+        return {
+          contacts: [...contacts, contact],
+        };
+      });
+    }
+  };
+
+  onChangeFilter = (e) => {
+    const filterTrim = e.currentTarget.value.trim();
+    // if (filterTrim === "") {
+    //   alert("Please enter name");
+    //   return;
+    // }
+    this.setState({ filter: filterTrim });
+  };
+
+  getContacts = () => {
+    const { contacts, filter } = this.state;
+    const normalizedFilter = filter.toLowerCase();
+    // by name
+    return contacts.filter((contactItem) =>
+      contactItem.name.toLowerCase().includes(normalizedFilter)
+    );
+  };
+
+  onDeleteContact = (contactId) => {
+    this.setState(({ contacts }) => ({
+      contacts: contacts.filter((contact) => contact.id !== contactId),
+    }));
+  };
+
+  render() {
+    return (
+      <Container>
+        <h1>Phonebook</h1>
+        <ContactForm addNewContact={this.addNewContact} />
+
+        <h2>Contacts</h2>
+        <Filter value={this.filter} onChange={this.onChangeFilter} />
+        <ContactList
+          contacts={this.getContacts()}
+          handleDeleteContact={this.onDeleteContact}
+        />
+      </Container>
+    );
+  }
 }
 
 export default App;
