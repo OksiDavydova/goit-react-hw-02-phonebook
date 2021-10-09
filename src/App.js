@@ -7,6 +7,7 @@ import SectionTitle from "./components/Title/SectionTitle/SectionTitle";
 import { ContactForm } from "./components/ContactForm/ContactForm";
 import { ContactList } from "./components/ContactList/ContactList";
 import { Filter } from "./components/Filter/Filter";
+import { Notification } from "./components/Notification/Notification";
 class App extends Component {
   state = {
     contacts: [
@@ -68,7 +69,7 @@ class App extends Component {
   };
 
   render() {
-    const { filter } = this;
+    const { filter, contacts } = this.state;
     const visibleContacts = this.getContacts();
     return (
       <Container>
@@ -76,10 +77,14 @@ class App extends Component {
         <ContactForm addNewContact={this.addNewContact} />
         <SectionTitle sectionTitle="Contacts" />
         <Filter value={filter} onChange={this.onChangeFilter} />
-        <ContactList
-          contacts={visibleContacts}
-          handleDeleteContact={this.onDeleteContact}
-        />
+        {contacts.length > 0 ? (
+          <ContactList
+            contacts={visibleContacts}
+            handleDeleteContact={this.onDeleteContact}
+          />
+        ) : (
+          <Notification />
+        )}
       </Container>
     );
   }
