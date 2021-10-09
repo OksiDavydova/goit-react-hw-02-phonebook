@@ -2,6 +2,8 @@ import "./App.css";
 import React, { Component } from "react";
 import shortid from "shortid";
 import { Container } from "./components/Container/Container";
+import HeroTitle from "./components/Title/Title";
+import SectionTitle from "./components/Title/SectionTitle/SectionTitle";
 import { ContactForm } from "./components/ContactForm/ContactForm";
 import { ContactList } from "./components/ContactList/ContactList";
 import { Filter } from "./components/Filter/Filter";
@@ -45,12 +47,8 @@ class App extends Component {
     }
   };
 
-  onChangeFilter = (e) => {
-    const filterTrim = e.currentTarget.value.trim();
-    // if (filterTrim === "") {
-    //   alert("Please enter name");
-    //   return;
-    // }
+  onChangeFilter = ({ target }) => {
+    const filterTrim = target.value.trim();
     this.setState({ filter: filterTrim });
   };
 
@@ -70,15 +68,16 @@ class App extends Component {
   };
 
   render() {
+    const { filter } = this;
+    const visibleContacts = this.getContacts();
     return (
       <Container>
-        <h1>Phonebook</h1>
+        <HeroTitle title="Phonebook" />
         <ContactForm addNewContact={this.addNewContact} />
-
-        <h2>Contacts</h2>
-        <Filter value={this.filter} onChange={this.onChangeFilter} />
+        <SectionTitle sectionTitle="Contacts" />
+        <Filter value={filter} onChange={this.onChangeFilter} />
         <ContactList
-          contacts={this.getContacts()}
+          contacts={visibleContacts}
           handleDeleteContact={this.onDeleteContact}
         />
       </Container>
