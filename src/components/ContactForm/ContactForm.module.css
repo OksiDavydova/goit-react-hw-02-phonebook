@@ -1,6 +1,6 @@
 .form_overlay {
   width: 100%;
-  border-style: groove;
+  border-style: outset;
   margin-bottom: 20px;
 }
 .form {
